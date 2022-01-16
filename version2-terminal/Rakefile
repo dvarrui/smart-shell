@@ -1,0 +1,40 @@
+# File: Rakefile
+# Usage: rake
+
+# Define tasks
+
+desc "Default: check"
+task :default => [:check] do
+  puts "Default task: checking..."
+end
+
+list=[ 'rainbow', 'terminal-table', 'thor' ]
+
+desc "Install gems "
+task :gems do
+  list.each { |name| system("gem install #{name}") }
+end
+
+desc "Check installation"
+task :check do
+  cmd=(`gem list`).split("\n")
+  names = cmd.map { |i| i.split(" ")[0]}
+  fails = []
+  list.each { |i| fails << i unless names.include?(i) }
+
+  if fails.size==0
+    puts "[INFO] Check OK!"
+  else
+    puts "[ERRO] Check FAILS!: "+fails.join(",")
+ end
+end
+
+desc "Update this project"
+task :update do
+  system("git pull")
+end
+
+desc "Clean data dir"
+task :clean do
+  system("rm data/*")
+end
